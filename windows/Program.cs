@@ -23,7 +23,7 @@ internal static class Program
 
         public MainForm()
         {
-            Text = "VidLoom Video Downloader";
+            Text = "All Video Downloader Without Watermark";
             StartPosition = FormStartPosition.CenterScreen;
             Width = 1280;
             Height = 820;
