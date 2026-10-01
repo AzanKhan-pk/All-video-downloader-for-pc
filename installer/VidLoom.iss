@@ -1,4 +1,4 @@
-#define AppName "VidLoom Video Downloader"
+#define AppName "All Video Downloader Without Watermark"
 #define AppVersion "1.0.0"
 #define AppPublisher "Azan Khan"
 #define AppExeName "VidLoom.exe"
@@ -28,10 +28,10 @@ Source: "..\build\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubd
 Source: "..\build\MicrosoftEdgeWebView2Setup.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 [Icons]
-Name: "{autodesktop}\VidLoom Video Downloader"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
-Name: "{group}\VidLoom Video Downloader"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
+Name: "{autodesktop}\All Video Downloader Without Watermark"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
+Name: "{group}\All Video Downloader Without Watermark"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
 Name: "{group}\Uninstall VidLoom"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{tmp}\MicrosoftEdgeWebView2Setup.exe"; Parameters: "/silent /install"; StatusMsg: "Installing Microsoft Edge WebView2 Runtime..."; Flags: runhidden waituntilterminated
-Filename: "{app}\{#AppExeName}"; Description: "Launch VidLoom Video Downloader"; Flags: postinstall nowait skipifsilent unchecked
+Filename: "{app}\{#AppExeName}"; Description: "Launch All Video Downloader Without Watermark"; Flags: postinstall nowait skipifsilent unchecked
