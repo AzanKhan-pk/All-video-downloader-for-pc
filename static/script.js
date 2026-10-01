@@ -52,7 +52,9 @@ function updateQualityButtons() {
   const available = new Set((currentVideo && currentVideo.available_qualities) || []);
   document.querySelectorAll(".quality-grid button").forEach((button) => {
     const quality = button.dataset.quality;
-    const enabled = !currentVideo || available.size === 0 || available.has(quality);
+    const maxAvailable = Math.max(...Array.from(available).map((q) => Number.parseInt(q, 10) || 0), 0);
+    const requested = Number.parseInt(quality, 10) || 0;
+    const enabled = selectedMode === "image" || !currentVideo || available.size === 0 || available.has(quality) || (requested > 0 && requested < maxAvailable);
     button.disabled = !enabled;
     button.title = enabled ? "Available from source" : quality + " is not available from this source";
     button.classList.toggle("unavailable", !enabled);
@@ -178,7 +180,7 @@ async function downloadMedia() {
   if (selectedMode === "video" &&
       currentVideo.available_qualities &&
       currentVideo.available_qualities.length &&
-      !currentVideo.available_qualities.includes(selectedQuality)) {
+      !currentVideo.available_qualities.includes(selectedQuality) && Number.parseInt(selectedQuality, 10) >= Math.max(...currentVideo.available_qualities.map((q) => Number.parseInt(q, 10) || 0))) {
     setStatus(selectedQuality + " is not available for this source. Please select another quality.", "error");
     return;
   }
