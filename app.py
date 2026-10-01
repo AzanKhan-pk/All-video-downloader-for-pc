@@ -320,11 +320,14 @@ def choose_video_format(info, requested_height):
     heights = available_video_heights(info)
     if not heights:
         raise RuntimeError('No downloadable video qualities were found for this media.')
-    candidates = [height for height in heights if height <= requested_height]
+    if requested_height > max(heights):
+        available = ', '.join(f'{height}p' for height in heights[-10:])
+        raise RuntimeError(f'{requested_height}p is not available. Available qualities: {available}. Please select another quality.')
+    candidates = [height for height in heights if height >= requested_height]
     if not candidates:
         available = ', '.join(f'{height}p' for height in heights[-10:])
         raise RuntimeError(f'{requested_height}p is not available. Available qualities: {available}. Please select another quality.')
-    source_height = requested_height if requested_height in candidates else max(candidates)
+    source_height = min(candidates)
     exact = f'[height={source_height}]'
     if FFMPEG_AVAILABLE:
         selected_format = (
@@ -479,6 +482,9 @@ def run_download_job(job_id):
             "outtmpl": str(temp_dir / "%(id)s.%(ext)s"),
             "progress_hooks": [progress_hook(job_id)],
         })
+
+        requested_height = QUALITY_HEIGHTS.get(quality, 720)
+        source_height = requested_height
 
         if mode == "image":
             thumbnails = info.get("thumbnails") or []
@@ -666,7 +672,7 @@ def api_download():
         mode = payload.get("mode", "video")
         quality = payload.get("quality", "720p")
 
-        if mode not in {"video", "audio"}:
+        if mode not in {"video", "audio", "image"}:
             raise ValueError("Unsupported media type.")
         if mode == "video" and quality not in QUALITY_HEIGHTS:
             raise ValueError("Unsupported video quality.")
