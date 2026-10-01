@@ -8,10 +8,10 @@ AppId={{8D2E9D76-7D25-4A10-9D36-7C8A2E2F5C91}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
-DefaultDirName={autopf}\VidLoom
-DefaultGroupName=VidLoom
+DefaultDirName={autopf}\All Video Downloader Without Watermark
+DefaultGroupName=All Video Downloader Without Watermark
 OutputDir=..\build\installer
-OutputBaseFilename=VidLoom-Setup
+OutputBaseFilename=All-Video-Downloader-Without-Watermark-Setup
 SetupIconFile=..\windows\icon.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 ArchitecturesAllowed=x64compatible
@@ -30,7 +30,7 @@ Source: "..\build\MicrosoftEdgeWebView2Setup.exe"; DestDir: "{tmp}"; Flags: dele
 [Icons]
 Name: "{autodesktop}\All Video Downloader Without Watermark"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
 Name: "{group}\All Video Downloader Without Watermark"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
-Name: "{group}\Uninstall VidLoom"; Filename: "{uninstallexe}"
+Name: "{group}\Uninstall All Video Downloader Without Watermark"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{tmp}\MicrosoftEdgeWebView2Setup.exe"; Parameters: "/silent /install"; StatusMsg: "Installing Microsoft Edge WebView2 Runtime..."; Flags: runhidden waituntilterminated
