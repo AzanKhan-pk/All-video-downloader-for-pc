@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="VidLoom Video Downloader — All Video Downloader for Free. Paste a public YouTube, TikTok, Instagram, Facebook, X/Twitter, Reddit, Vimeo, Twitch, Dailymotion, SoundCloud or Bilibili link and download the available MP4 video or MP3 audio for free."
+  >
+
+  <meta
+    name="theme-color"
+    content="#6366f1"
+  >
+
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="google-adsense-account"
+    content="ca-pub-2404211463113597"
+  >
+
+  <!-- PWA Manifest -->
+  <link
+    rel="manifest"
+    href="/manifest.json"
+  >
+
+  <!-- Website Icon -->
+  <link
+    rel="icon"
+    type="image/png"
+    href="{{ url_for('static', filename='logo.png') }}"
+  >
+
+  <!-- Apple Icon -->
+  <link
+    rel="apple-touch-icon"
+    href="/static/icon-192.png"
+  >
+
+  <!-- Fonts -->
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Styles -->
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+  >
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "VidLoom Video Downloader",
+    "alternateName": ["VidLoom Video Downloader", "All Video Downloader for Free", "VidLoom"],
+    "description": "VidLoom Video Downloader — All Video Downloader for Free. Paste a public video or audio link and download the available MP4 or MP3 file.",
+    "url": "https://avd.up.railway.app/"
+  }
+  </script>
+
+  <link rel="canonical" href="https://avd.up.railway.app/">
+  <title>VidLoom Video Downloader | All Video Downloader for Free</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2404211463113597" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <div class="noise"></div>
+
+  <!-- HEADER -->
+
+  <header class="site-header">
+
+    <a
+      class="brand"
+      href="#top"
+      aria-label="VidLoom Video Downloader home"
+    >
+      <img
+        class="brand-logo"
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="VidLoom Video Downloader logo"
+      >
+
+      <span class="brand-text">
+        VidLoom VIDEO<br>
+        <b>DOWNLOADER</b>
+      </span>
+    </a>
+
+    <nav aria-label="Primary navigation">
+
+      <a href="#downloader">
+        Downloader
+      </a>
+
+      <a href="#platforms">
+        Platforms
+      </a>
+
+      <a href="#about">
+        About owner
+      </a>
+
+      <a href="#feedback">
+        Feedback
+      </a>
+      <a href="/how-to-use">
+        Guide
+      </a>
+      <a href="/faq">
+        FAQ
+      </a>
+
+    </nav>
+
+    <div
+      style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+      "
+    >
+
+      <a
+        class="header-chip"
+        href="#downloader"
+      >
+        Start now <span>↗</span>
+      </a>
+
+      <!-- PWA INSTALL BUTTON -->
+
+      <button
+        id="installBtn"
+        class="header-chip install-btn"
+        type="button"
+        hidden
+      >
+        Install app ↓
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main id="top">
+
+
+    <!-- HERO -->
+
+    <section class="hero section-shell">
+
+      <div class="hero-copy reveal">
+
+        <p class="eyebrow">
+
+          <span class="pulse"></span>
+
+          Free public-media download tool
+
+        </p>
+
+        <h1>
+          One click.<br>
+          <em>Everywhere.</em>
+        </h1>
+
+        <p class="hero-lede">
+
+          A focused, no-nonsense downloader built with
+          Python Flask and public web media links for a simple
+          download experience.
+
+        </p>
+
+        <a
+          class="text-link"
+          href="#downloader"
+        >
+          Open the downloader <span>↓</span>
+        </a>
+
+      </div>
+
+
+      <div
+        class="hero-orbit reveal"
+        aria-hidden="true"
+      >
+
+        <div class="orbit orbit-a"></div>
+
+        <div class="orbit orbit-b"></div>
+
+        <div class="orbit-core">
+
+          <span>AVD</span>
+
+          <small>01 / 24</small>
+
+        </div>
+
+        <div class="signal signal-one">
+          MP4
+        </div>
+
+        <div class="signal signal-two">
+          MP3
+        </div>
+
+        <div class="signal signal-three">
+          4K
+        </div>
+
+      </div>
+
+
+      <div class="hero-foot reveal">
+
+        <span>
+          PUBLIC MEDIA ONLY
+        </span>
+
+        <span>
+          BUILT IN FLASK
+        </span>
+
+        <span>
+          BY AZAN KHAN
+        </span>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- DOWNLOADER -->
+
+    <section
+      id="downloader"
+      class="downloader section-shell reveal"
+    >
+
+      <div class="section-intro">
+
+        <p class="eyebrow">
+          01 / Download
+        </p>
+
+        <h2>
+          Drop a link.<br>
+          <span>Get moving.</span>
+        </h2>
+
+        <p>
+
+          Paste a public video URL from a supported platform.
+          Private or login-required content stays off-limits.
+
+        </p>
+
+      </div>
+
+
+      <div class="tool-panel">
+
+
+        <!-- URL -->
+
+        <div class="url-row">
+
+          <label for="url">
+            SOURCE URL
+          </label>
+
+          <div class="url-input">
+
+            <span>↗</span>
+
+            <input
+              id="url"
+              type="url"
+              placeholder="https://youtube.com/watch?v=..."
+              autocomplete="off"
+            >
+
+            <button
+              id="fetchBtn"
+              type="button"
+            >
+              Fetch media <b>↗</b>
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- MODE -->
+
+        <div class="mode-row">
+
+          <button
+            class="mode active"
+            type="button"
+            data-mode="video"
+          >
+
+            <span class="mode-icon">
+              ▶
+            </span>
+
+            <span>
+
+              <b>Video</b>
+
+              <small>
+                MP4 format
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <button
+            class="mode"
+            type="button"
+            data-mode="audio"
+          >
+
+            <span class="mode-icon">
+              ◉
+            </span>
+
+            <span>
+
+              <b>Audio</b>
+
+              <small>
+                MP3 format
+              </small>
+
+            </span>
+
+          </button>
+
+        </div>
+
+
+
+        <!-- QUALITY -->
+
+        <div class="quality-wrap">
+
+          <div class="quality-head">
+
+            <label>
+              QUALITY
+            </label>
+
+            <span id="qualityLabel">
+              720p recommended
+            </span>
+
+          </div>
+
+
+          <div
+            class="quality-grid"
+            id="qualityGrid"
+          >
+
+            <button
+              type="button"
+              data-quality="360p"
+            >
+              360p
+            </button>
+
+            <button
+              type="button"
+              data-quality="480p"
+            >
+              480p
+            </button>
+
+            <button
+              class="selected"
+              type="button"
+              data-quality="720p"
+            >
+              720p
+            </button>
+
+            <button
+              type="button"
+              data-quality="1080p"
+            >
+              1080p
+            </button>
+
+            <button
+              type="button"
+              data-quality="1440p"
+            >
+              1440p
+            </button>
+
+            <button
+              type="button"
+              data-quality="4K"
+            >
+              4K
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ADVANCED -->
+
+        <details class="advanced">
+
+          <summary>
+
+            Show advanced options
+
+            <span>+</span>
+
+          </summary>
+
+
+          <div class="advanced-grid">
+
+            <label>
+
+              Download location
+
+              <select>
+
+                <option>
+                  Browser downloads
+                </option>
+
+                <option>
+                  Ask every time
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+
+              Video codec
+
+              <select>
+
+                <option>
+                  Auto
+                </option>
+
+                <option>
+                  H.264
+                </option>
+
+                <option>
+                  VP9
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+
+              Audio codec
+
+              <select>
+
+                <option>
+                  Auto
+                </option>
+
+                <option>
+                  AAC
+                </option>
+
+                <option>
+                  Opus
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+
+              Frame options
+
+              <select>
+
+                <option>
+                  Keep original
+                </option>
+
+                <option>
+                  30 FPS
+                </option>
+
+                <option>
+                  60 FPS
+                </option>
+
+              </select>
+
+            </label>
+
+          </div>
+
+        </details>
+
+
+
+        <!-- STATUS -->
+
+        <div
+          id="status"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- RESULT -->
+
+        <div
+          id="result"
+          class="result"
+          hidden
+        ></div>
+
+
+
+        <!-- DOWNLOAD PROGRESS -->
+
+        <div
+          id="downloadProgress"
+          class="download-progress"
+          hidden
+          aria-live="polite"
+        >
+
+          <div class="download-progress-head">
+
+            <div>
+
+              <p class="download-progress-label">
+                DOWNLOAD STATUS
+              </p>
+
+              <h3 id="downloadTitle">
+                Preparing download...
+              </h3>
+
+            </div>
+
+
+            <strong id="downloadPercent">
+              0%
+            </strong>
+
+          </div>
+
+
+
+          <div class="download-progress-track">
+
+            <div
+              id="downloadProgressBar"
+              class="download-progress-bar"
+              style="width: 0%"
+            ></div>
+
+          </div>
+
+
+
+          <div class="download-progress-stats">
+
+            <span id="downloadAmount">
+              0 B / —
+            </span>
+
+            <span id="downloadSpeed">
+              —
+            </span>
+
+            <span id="downloadEta">
+              ETA —
+            </span>
+
+          </div>
+
+
+
+          <div
+            id="downloadNetwork"
+            class="download-network"
+            hidden
+          ></div>
+
+
+
+          <div class="download-progress-actions">
+
+            <button
+              id="pauseDownloadBtn"
+              type="button"
+            >
+              Pause
+            </button>
+
+
+            <button
+              id="resumeDownloadBtn"
+              type="button"
+              hidden
+            >
+              Resume
+            </button>
+
+
+            <button
+              id="cancelDownloadBtn"
+              type="button"
+              class="download-cancel"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- PLATFORMS -->
+
+    <section
+      id="platforms"
+      class="platforms section-shell reveal"
+    >
+
+      <div class="section-intro">
+
+        <p class="eyebrow">
+          02 / Supported platforms
+        </p>
+
+        <h2>
+          One tool.<br>
+          <span>Many sources.</span>
+        </h2>
+
+        <p>
+
+          Use public media links from these platforms
+          and other services supported by yt-dlp.
+
+        </p>
+
+      </div>
+
+
+      <div
+        class="platform-list"
+        aria-label="Supported platforms"
+      >
+
+        <div>
+
+          <strong>01</strong>
+
+          <span>YouTube</span>
+
+          <small>
+            Video · Shorts
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>02</strong>
+
+          <span>TikTok</span>
+
+          <small>
+            Public clips
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>03</strong>
+
+          <span>Instagram</span>
+
+          <small>
+            Public posts
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>04</strong>
+
+          <span>Facebook</span>
+
+          <small>
+            Public video
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>05</strong>
+
+          <span>Twitter / X</span>
+
+          <small>
+            Public media
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>06</strong>
+
+          <span>SoundCloud</span>
+
+          <small>
+            Audio
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>07</strong>
+
+          <span>Dailymotion</span>
+
+          <small>
+            Video
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>08</strong>
+
+          <span>Reddit</span>
+
+          <small>
+            Public video
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>09</strong>
+
+          <span>Vimeo</span>
+
+          <small>
+            Video
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>10</strong>
+
+          <span>Twitch</span>
+
+          <small>
+            Public clips
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>11</strong>
+
+          <span>Bilibili</span>
+
+          <small>
+            Video
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <strong>12</strong>
+
+          <span>More services</span>
+
+          <small>
+            yt-dlp support
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- HOW IT WORKS -->
+
+    <section
+      id="how"
+      class="how section-shell reveal"
+    >
+
+      <div class="section-intro">
+
+        <p class="eyebrow">
+          03 / The flow
+        </p>
+
+        <h2>
+          Simple by<br>
+          <span>design.</span>
+        </h2>
+
+      </div>
+
+
+      <div class="flow">
+
+        <article>
+
+          <span>01</span>
+
+          <h3>Paste</h3>
+
+          <p>
+            Bring a public link from one
+            of the supported platforms.
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <span>02</span>
+
+          <h3>Choose</h3>
+
+          <p>
+            Pick the format and quality
+            that fits the moment.
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <span>03</span>
+
+          <h3>Download</h3>
+
+          <p>
+            Fetch the file, then get
+            back to creating.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ABOUT -->
+
+    <section
+      id="about"
+      class="about section-shell reveal"
+    >
+
+      <div class="about-portrait">
+
+        <div class="portrait-grid"></div>
+
+        <div class="initials">
+          AK
+        </div>
+
+        <span>
+          EST. 2024<br>
+          AL AZHAR
+        </span>
+
+      </div>
+
+
+      <div class="about-copy">
+
+        <p class="eyebrow">
+          04 / About the owner
+        </p>
+
+        <h2>
+          Curious enough<br>
+          to <span>build it.</span>
+        </h2>
+
+        <p>
+
+          Azan Khan is a student and creator.
+          This website was created as a technology
+          learning project to understand modern web
+          development, Python programming, digital
+          creativity and user interface design.
+
+        </p>
+
+        <p>
+
+          The purpose of this project is to improve
+          technology skills, English communication,
+          problem solving and practical development
+          experience by building a real application.
+
+        </p>
+
+        <div class="owner-line">
+
+          <b>
+            AZAN KHAN
+          </b>
+
+          <span>
+            Student · Learner · Creator
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- FEEDBACK -->
+
+    <section
+      id="feedback"
+      class="feedback section-shell reveal"
+    >
+
+      <div>
+
+        <p class="eyebrow">
+          05 / Open channel
+        </p>
+
+        <h2>
+          Make it<br>
+          <span>better.</span>
+        </h2>
+
+        <p>
+
+          Suggest an improvement or report an issue.
+          Every useful note helps this learning project
+          level up.
+
+        </p>
+
+      </div>
+
+
+      <form id="commentForm">
+
+        <label for="name">
+          YOUR NAME
+        </label>
+
+        <input
+          id="name"
+          required
+          maxlength="80"
+          placeholder="How should we call you?"
+        >
+
+
+        <label for="comment">
+          YOUR NOTE
+        </label>
+
+        <textarea
+          id="comment"
+          required
+          maxlength="1000"
+          rows="4"
+          placeholder="Suggest an improvement or report an issue"
+        ></textarea>
+
+
+        <button
+          class="solid-btn"
+          type="submit"
+        >
+          Send feedback <span>↗</span>
+        </button>
+
+
+        <div
+          id="commentStatus"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+      </form>
+
+    </section>
+
+
+
+    <!-- ADMIN -->
+
+    {% if admin_data %}
+
+    <section class="admin section-shell">
+
+      <p class="eyebrow">
+        Admin analytics
+      </p>
+
+
+      <div class="admin-metrics">
+
+        <div>
+
+          <strong>
+            {{ admin_data.visits }}
+          </strong>
+
+          <span>
+            Visits
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            {{ admin_data.downloads }}
+          </strong>
+
+          <span>
+            Downloads
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            {{ admin_data.comments }}
+          </strong>
+
+          <span>
+            Comments
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="admin-table">
+
+        <h3>
+          Top videos
+        </h3>
+
+
+        {% for item in admin_data.top_videos %}
+
+        <p>
+
+          <span>
+            {{ item.title }}
+          </span>
+
+          <b>
+            {{ item.count }}
+          </b>
+
+        </p>
+
+        {% else %}
+
+        <p>
+          No downloads yet.
+        </p>
+
+        {% endfor %}
+
+
+        <h3>
+          Platforms
+        </h3>
+
+
+        {% for item in admin_data.platforms %}
+
+        <p>
+
+          <span>
+            {{ item.platform }}
+          </span>
+
+          <b>
+            {{ item.count }}
+          </b>
+
+        </p>
+
+        {% endfor %}
+
+      </div>
+
+    </section>
+
+    {% endif %}
+
+
+  </main>
+
+
+
+  <!-- FOOTER -->
+
+
+    <section id="guide" class="how section-shell reveal">
+      <div class="section-intro">
+        <p class="eyebrow">06 / Download guide</p>
+        <h2>How to use the<br><span>video downloader.</span></h2>
+        <p>VidLoom is designed for public media that you are allowed to download. Always respect copyright, platform rules and the rights of creators.</p>
+      </div>
+      <div class="flow">
+        <article><span>01</span><h3>Copy a public link</h3><p>Open a supported public video or audio page and copy its complete URL from the address bar or share menu.</p></article>
+        <article><span>02</span><h3>Paste and inspect</h3><p>Paste the URL into VidLoom and select Fetch media. The site checks the public link and displays available information.</p></article>
+        <article><span>03</span><h3>Choose a format</h3><p>Select video or audio and choose an available quality. Higher resolutions depend on the source and server processing tools.</p></article>
+      </div>
+    </section>
+
+    <section id="faq" class="about section-shell reveal">
+      <div class="about-copy">
+        <p class="eyebrow">07 / Frequently asked questions</p>
+        <h2>Useful answers,<br>before you <span>download.</span></h2>
+        <p><b>Is VidLoom free?</b><br>VidLoom provides its public-media tool without a subscription on the current website.</p>
+        <p><b>Why does a link sometimes fail?</b><br>A platform may change its public page, require login, restrict automated access, or remove the media. Available formats can also differ by video.</p>
+        <p><b>Can every quality be downloaded?</b><br>No. The source decides which qualities and formats are available. VidLoom can only process compatible formats that are actually available from the public source.</p>
+        <p><b>Can private or login-only media be downloaded?</b><br>No. The site is intended for public media and does not provide a way to bypass private access or account restrictions.</p>
+        <p><b>Where can I learn more?</b><br>Read the <a href="/how-to-use">step-by-step guide</a>, <a href="/faq">full FAQ</a>, <a href="/about">About page</a> and <a href="/about">About</a>
+    <a href="/how-to-use">How to Use</a>
+    <a href="/faq">FAQ</a>
+    <a href="/terms">Terms</a>
+    <a href="/privacy">Privacy Policy</a>.</p>
+      </div>
+    </section>
+
+  <footer class="site-footer section-shell">
+
+    <span>
+      VidLoom VIDEO DOWNLOADER
+    </span>
+
+    <span>
+      ONE CLICK FOR FREE
+    </span>
+
+    <span>
+      © 2026 AZAN KHAN
+    </span>
+
+    <a href="/privacy">
+      Privacy Policy
+    </a>
+
+  </footer>
+
+
+
+  <!-- MAIN JAVASCRIPT -->
+
+  <script
+    src="{{ url_for('static', filename='script.js') }}"
+  ></script>
+
+
+
+  <!-- PWA INSTALL SCRIPT -->
+
+  <script>
+
+    let deferredPrompt = null;
+
+    const installBtn =
+      document.getElementById("installBtn");
+
+
+    window.addEventListener(
+      "beforeinstallprompt",
+      (event) => {
+
+        event.preventDefault();
+
+        deferredPrompt = event;
+
+        if (installBtn) {
+          installBtn.hidden = false;
+        }
+
+      }
+    );
+
+
+    installBtn?.addEventListener(
+      "click",
+      async () => {
+
+        if (!deferredPrompt) {
+          return;
+        }
+
+        deferredPrompt.prompt();
+
+        const choice =
+          await deferredPrompt.userChoice;
+
+        console.log(
+          "Install choice:",
+          choice.outcome
+        );
+
+        deferredPrompt = null;
+
+        installBtn.hidden = true;
+
+      }
+    );
+
+
+    window.addEventListener(
+      "appinstalled",
+      () => {
+
+        deferredPrompt = null;
+
+        if (installBtn) {
+          installBtn.hidden = true;
+        }
+
+        console.log(
+          "VidLoom installed successfully"
+        );
+
+      }
+    );
+
+
+    /* SERVICE WORKER */
+
+    if ("serviceWorker" in navigator) {
+
+      window.addEventListener(
+        "load",
+        () => {
+
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then(() => {
+
+              console.log(
+                "VidLoom service worker registered"
+              );
+
+            })
+            .catch((error) => {
+
+              console.error(
+                "Service worker registration failed:",
+                error
+              );
+
+            });
+
+        }
+      );
+
+    }
+
+  </script>
+
+
+</body>
+</html>
