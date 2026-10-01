@@ -62,11 +62,6 @@ jobs:
           python -c "from PIL import Image; Image.open('logo.png').convert('RGBA').save('windows/icon.ico', sizes=[(256,256),(128,128),(64,64),(48,48),(32,32),(16,16)])"
       - name: Publish Windows app
         run: dotnet publish windows/VidLoom.Desktop.csproj -c Release -r win-x64 --self-contained true -o build/publish
-      - name: Download WebView2 bootstrapper
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path build | Out-Null
-          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/p/?LinkId=2124703" -OutFile "build/MicrosoftEdgeWebView2Setup.exe"
       - name: Install Inno Setup
         shell: pwsh
         run: choco install innosetup --no-progress -y
@@ -95,12 +90,9 @@ jobs:
         with:
           name: release-windows
           path: release
-      - name: Create release with APK and EXE
+      - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="v1.0.${{ github.run_number }}"
-          gh release create "$TAG" release/All-Video-Downloader.apk release/All-Video-Downloader-Without-Watermark-Setup.exe \
-            --repo "${{ github.repository }}" \
-            --title "All Video Downloader Without Watermark $TAG" \
-            --generate-notes
+          gh release create "$TAG" release/All-Video-Downloader.apk release/All-Video-Downloader-Without-Watermark-Setup.exe             --repo "${{ github.repository }}"             --title "All Video Downloader Without Watermark $TAG"             --generate-notes
