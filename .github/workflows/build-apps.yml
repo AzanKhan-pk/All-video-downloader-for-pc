@@ -35,7 +35,12 @@ jobs:
         working-directory: android
         run: gradle :app:assembleRelease --no-daemon
       - name: Collect APK
-        run: mkdir -p build && cp android/app/build/outputs/apk/release/app-release.apk build/VidLoom.apk
+        shell: bash
+        run: |
+          mkdir -p build
+          APK=$(find android/app/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' -print -quit)
+          test -n "$APK"
+          cp "$APK" build/VidLoom.apk
       - uses: actions/upload-artifact@v4
         with:
           name: VidLoom-Android
