@@ -1,4 +1,4 @@
-# VidLoom Video Downloader — All Video Downloader for Free
+# All Video Downloader Without Watermark — All Video Downloader for Free
 
 A Flask web app that lets people paste a public video/audio link and download
 it as MP4 (video) or MP3 (audio).
@@ -71,7 +71,7 @@ cannot actually download.
   `templates/` and `static/`). The Vercel entry-point shims
   (`index.py`, `api/index.py`) were kept since `vercel.json` depends on them.
 - SEO: page `<title>`, meta description, and structured data now clearly
-  include both **"VidLoom Video Downloader"** and **"All Video Downloader
+  include both **"All Video Downloader Without Watermark"** and **"All Video Downloader
   for Free"**, and the meta description accurately explains pasting a
   supported public link to get MP4/MP3.
 - Added Reddit, Vimeo, Twitch, and Bilibili to the "Supported platforms"
