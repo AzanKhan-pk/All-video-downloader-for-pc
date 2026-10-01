@@ -480,6 +480,42 @@ def run_download_job(job_id):
             "progress_hooks": [progress_hook(job_id)],
         })
 
+        if mode == "image":
+            thumbnails = info.get("thumbnails") or []
+            image_url = info.get("thumbnail")
+            ranked = [item for item in thumbnails if item.get("url")]
+            ranked.sort(key=lambda item: ((item.get("width") or 0) * (item.get("height") or 0), item.get("preference") or 0), reverse=True)
+            if ranked:
+                image_url = ranked[0].get("url")
+            if not image_url:
+                raise RuntimeError("No downloadable image was found on this media page.")
+            image_name = re.sub(r"[^\w\s.-]", "", title).strip()[:90] or "image"
+            image_ext = Path(urlparse(image_url).path).suffix.lower()
+            if image_ext not in {".jpg", ".jpeg", ".png", ".webp", ".gif"}:
+                image_ext = ".jpg"
+            output_path = temp_dir / f"{image_name}{image_ext}"
+            image_request = urllib.request.Request(image_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(image_request, timeout=60) as source, open(output_path, "wb") as target:
+                total = int(source.headers.get("Content-Length") or 0)
+                downloaded = 0
+                while True:
+                    chunk = source.read(1024 * 256)
+                    if not chunk:
+                        break
+                    target.write(chunk)
+                    downloaded += len(chunk)
+                    update_job(job_id, status="downloading", downloaded_bytes=downloaded, total_bytes=total, percent=(downloaded / total * 100) if total else 0, speed=0, eta=None)
+            final_size = output_path.stat().st_size
+            if final_size < MIN_VALID_FILE_BYTES:
+                raise RuntimeError("The downloaded image is empty or invalid.")
+            with get_db() as connection:
+                connection.execute(
+                    "INSERT INTO downloads(title, platform, quality, file_type, source_url, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                    (title, platform_for(url), "Original", "IMAGE", url, now_iso()),
+                )
+            update_job(job_id, status="completed", downloaded_bytes=final_size, total_bytes=final_size, percent=100, speed=0, eta=0, file_path=str(output_path), filename=output_path.name, title=title, platform=platform_for(url), file_type="IMAGE")
+            return
+
         if mode == "audio":
             if not FFMPEG_AVAILABLE:
                 raise RuntimeError(
@@ -717,6 +753,15 @@ def download_file(job_id):
         download_name=f"{safe_name}.{extension}",
         mimetype="audio/mpeg" if extension == "mp3" else "video/mp4",
     )
+
+
+@app.get("/api/recent")
+def api_recent():
+    with get_db() as connection:
+        rows = connection.execute(
+            "SELECT id, title, platform, quality, file_type, created_at FROM downloads ORDER BY id DESC LIMIT 20"
+        ).fetchall()
+    return jsonify({"ok": True, "items": [dict(row) for row in rows]})
 
 
 @app.post("/api/comments")
