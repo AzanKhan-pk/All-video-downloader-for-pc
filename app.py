@@ -549,6 +549,24 @@ def run_download_job(job_id):
             info = ydl.extract_info(url, download=True)
 
         final_path, final_size = find_output_file(temp_dir, mode)
+
+        if mode == "video" and requested_height < source_height:
+            compressed_path = temp_dir / (final_path.stem + "_compressed.mp4")
+            update_job(job_id, status="processing", percent=99.0, speed=0, eta=None)
+            ffmpeg_bin = FFMPEG_PATH or "ffmpeg"
+            result = subprocess.run(
+                [ffmpeg_bin, "-y", "-i", str(final_path), "-vf", f"scale=-2:{requested_height}",
+                 "-c:v", "libx264", "-preset", "medium", "-crf", "24", "-c:a", "aac",
+                 "-movflags", "+faststart", str(compressed_path)], capture_output=True, text=True, timeout=1800
+            )
+            if result.returncode != 0 or not compressed_path.is_file():
+                raise RuntimeError("Could not create the requested lower-quality video.")
+            final_path.unlink(missing_ok=True)
+            final_path = compressed_path
+            final_size = final_path.stat().st_size
+            if final_size < MIN_VALID_FILE_BYTES:
+                raise RuntimeError("The compressed video is empty or invalid.")
+
         title = info.get("title") or title
         platform = platform_for(url)
 
