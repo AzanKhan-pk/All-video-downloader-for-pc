@@ -47,6 +47,9 @@ internal static class Program
                       window.VidLoomNative = {
                         download: (url, filename) => {
                           window.chrome.webview.postMessage({ type: "download", url, filename });
+                        },
+                        openDownloads: () => {
+                          window.chrome.webview.postMessage({ type: "openDownloads" });
                         }
                       };
                     })();
@@ -67,7 +70,21 @@ internal static class Program
             {
                 using var document = JsonDocument.Parse(e.WebMessageAsJson);
                 var root = document.RootElement;
-                if (!root.TryGetProperty("type", out var type) || type.GetString() != "download") return;
+                if (!root.TryGetProperty("type", out var type)) return;
+                var messageType = type.GetString();
+                if (messageType == "openDownloads")
+                {
+                    var downloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                    Directory.CreateDirectory(downloads);
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "explorer.exe",
+                        Arguments = $"\\\"{downloads}\\\"",
+                        UseShellExecute = true
+                    });
+                    return;
+                }
+                if (messageType != "download") return;
 
                 var url = root.GetProperty("url").GetString();
                 var filename = root.GetProperty("filename").GetString();
