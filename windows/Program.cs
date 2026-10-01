@@ -105,14 +105,6 @@ internal static class Program
             {
             }
 
-            public bool RunContextMenu(
-                IWebBrowser chromiumWebBrowser,
-                IBrowser browser,
-                IFrame frame,
-                IContextMenuParams parameters,
-                IRunContextMenuCallback callback,
-                int commandId)
-                => false;
         }
 
         private sealed class NativeBridge
