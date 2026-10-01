@@ -39,55 +39,7 @@ QUALITY_HEIGHTS = {
 # Only hosts that a real, currently-maintained yt-dlp extractor can reliably
 # read are allowed here. Nothing is listed unless it has actually been
 # exercised against the download pipeline below.
-ALLOWED_HOSTS = {
-    # YouTube (videos + Shorts)
-    "youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be",
-    "youtube-nocookie.com", "www.youtube-nocookie.com",
-
-    # TikTok
-    "tiktok.com", "www.tiktok.com", "vm.tiktok.com", "vt.tiktok.com",
-
-    # Instagram (public posts, reels)
-    "instagram.com", "www.instagram.com",
-
-    # Facebook (public videos)
-    "facebook.com", "www.facebook.com", "m.facebook.com", "fb.watch",
-
-    # X / Twitter (public videos)
-    "twitter.com", "www.twitter.com", "x.com", "www.x.com",
-
-    # Reddit (public videos)
-    "reddit.com", "www.reddit.com", "old.reddit.com", "new.reddit.com",
-    "v.redd.it", "redd.it",
-
-    # Vimeo
-    "vimeo.com", "www.vimeo.com", "player.vimeo.com",
-
-    # Dailymotion
-    "dailymotion.com", "www.dailymotion.com", "dai.ly",
-
-    # Twitch (public clips/videos)
-    "twitch.tv", "www.twitch.tv", "m.twitch.tv", "clips.twitch.tv",
-
-    # SoundCloud (public audio)
-    "soundcloud.com", "www.soundcloud.com", "snd.sc",
-
-    # Bilibili
-    "bilibili.com", "www.bilibili.com", "b23.tv",
-
-    # Pinterest (public pins/videos)
-    "pinterest.com", "www.pinterest.com", "pin.it",
-    # Pinterest
-"pinterest.com",
-"www.pinterest.com",
-"pin.it",
-"www.pin.it",
-"i.pinimg.com",
-"images.pinimg.com",
-
-}
-
-DOWNLOAD_JOBS = {}
+# yt-dlp owns the supported extractor list; no hand-written host allow-list.\nDOWNLOAD_JOBS = {}
 DOWNLOAD_JOBS_LOCK = threading.Lock()
 
 FFMPEG_PATH = os.getenv("FFMPEG_PATH") or shutil.which("ffmpeg")
@@ -160,18 +112,21 @@ def send_notification(subject, body):
 
 
 def clean_url(value):
-    value = (value or "").strip()
+    value = (value or '').strip()
     parsed = urlparse(value)
-    host = (parsed.hostname or "").lower()
-    bare_host = host[4:] if host.startswith("www.") else host
-
-    if parsed.scheme not in {"http", "https"}:
-        raise ValueError("Please enter a valid public http or https URL.")
-
-    allowed_bare = {h[4:] if h.startswith("www.") else h for h in ALLOWED_HOSTS}
-    if host not in ALLOWED_HOSTS and bare_host not in allowed_bare:
-        raise ValueError("This platform is not currently supported.")
-
+    host = (parsed.hostname or '').strip().lower()
+    if parsed.scheme not in {'http', 'https'} or not host:
+        raise ValueError('Please enter a valid public http or https URL.')
+    if host in {'localhost', 'localhost.localdomain'}:
+        raise ValueError('Local computer URLs are not supported.')
+    try:
+        addresses = {item[4][0] for item in socket.getaddrinfo(host, None)}
+        for address in addresses:
+            ip = ipaddress.ip_address(address)
+            if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
+                raise ValueError('Private or local network URLs are not supported.')
+    except socket.gaierror:
+        pass
     return value
 
 
