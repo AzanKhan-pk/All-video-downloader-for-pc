@@ -745,13 +745,21 @@ def download_file(job_id):
     if not path.exists() or path.stat().st_size <= 0:
         return jsonify({"ok": False, "error": "Downloaded file is missing."}), 404
 
-    extension = "mp3" if job.get("mode") == "audio" else "mp4"
-    safe_name = re.sub(r"[^\w\s.-]", "", job.get("title") or "video").strip()[:90] or "video"
+    if job.get("mode") == "audio":
+        extension = "mp3"
+        mimetype = "audio/mpeg"
+    elif job.get("mode") == "image":
+        extension = Path(path).suffix.lstrip(".") or "jpg"
+        mimetype = "image/jpeg" if extension in {"jpg", "jpeg"} else "image/" + extension
+    else:
+        extension = "mp4"
+        mimetype = "video/mp4"
+    safe_name = re.sub(r"[^\w\s.-]", "", job.get("title") or "download").strip()[:90] or "download"
     return send_file(
         path,
         as_attachment=True,
         download_name=f"{safe_name}.{extension}",
-        mimetype="audio/mpeg" if extension == "mp3" else "video/mp4",
+        mimetype=mimetype,
     )
 
 
