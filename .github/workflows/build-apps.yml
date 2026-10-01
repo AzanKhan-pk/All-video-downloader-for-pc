@@ -1,0 +1,67 @@
+name: Build VidLoom Apps
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+      - name: Prepare app icon
+        run: cp icon-512.png android/app/src/main/res/drawable/app_icon.png
+      - name: Build APK
+        working-directory: android
+        run: gradle :app:assembleRelease --no-daemon
+      - name: Collect APK
+        run: mkdir -p build && cp android/app/build/outputs/apk/release/app-release.apk build/VidLoom.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VidLoom-Android
+          path: build/VidLoom.apk
+
+  windows:
+    name: Windows Installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Create app icon from existing logo
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python -c "from PIL import Image; Image.open('logo.png').convert('RGBA').save('windows/icon.ico', sizes=[(256,256),(128,128),(64,64),(48,48),(32,32),(16,16)])"
+      - name: Publish Windows app
+        run: dotnet publish windows/VidLoom.Desktop.csproj -c Release -r win-x64 --self-contained true -o build/publish
+      - name: Download WebView2 bootstrapper
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/p/?LinkId=2124703" -OutFile "build/MicrosoftEdgeWebView2Setup.exe"
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - name: Build installer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path build/installer | Out-Null
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" installer/VidLoom.iss
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VidLoom-Windows
+          path: build/installer/VidLoom-Setup.exe
