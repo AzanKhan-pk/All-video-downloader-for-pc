@@ -304,46 +304,36 @@ def format_views(info):
     return "Not available"
 
 
-def choose_video_format(info, requested_height):
-    """Build a yt-dlp format selector for the requested quality.
-
-    Falls back gracefully when the extractor does not expose a full
-    ``formats`` list with heights (common on simpler platforms) instead of
-    raising, so quality selection never blocks a download that would
-    otherwise succeed with yt-dlp's own "best" fallback.
-    """
-    formats = info.get("formats") or []
-    heights = sorted({
-        int(fmt["height"])
-        for fmt in formats
-        if fmt.get("height") and fmt.get("vcodec") not in (None, "none")
+def available_video_heights(info):
+    return sorted({
+        int(fmt['height'])
+        for fmt in (info.get('formats') or [])
+        if fmt.get('height') and fmt.get('vcodec') not in (None, 'none')
     })
 
-    if heights:
-        lower_or_equal = [h for h in heights if h <= requested_height]
-        source_height = max(lower_or_equal) if lower_or_equal else min(heights)
-        height_clause = f"={source_height}"
-    else:
-        source_height = requested_height
-        height_clause = f"<={requested_height}"
 
-    progressive = f"best[height{height_clause}][ext=mp4]/best[height{height_clause}]"
+def format_available_qualities(info):
+    return [f'{height}p' for height in available_video_heights(info)]
 
+
+def choose_video_format(info, requested_height):
+    heights = available_video_heights(info)
+    if not heights:
+        raise RuntimeError('No downloadable video qualities were found for this media.')
+    candidates = [height for height in heights if height <= requested_height]
+    if not candidates:
+        available = ', '.join(f'{height}p' for height in heights[-10:])
+        raise RuntimeError(f'{requested_height}p is not available. Available qualities: {available}. Please select another quality.')
+    source_height = requested_height if requested_height in candidates else max(candidates)
+    exact = f'[height={source_height}]'
     if FFMPEG_AVAILABLE:
-        split_streams = (
-            f"bestvideo[height{height_clause}][ext=mp4]+bestaudio[ext=m4a]/"
-            f"bestvideo[height{height_clause}]+bestaudio"
-        )
-        selected_format = f"{progressive}/{split_streams}/best[height<={requested_height}]/best"
-    else:
-        # Without FFmpeg we cannot merge separate video/audio streams, so
-        # restrict the selection to formats that already contain both.
         selected_format = (
-            f"{progressive}/"
-            f"best[height<={requested_height}][acodec!=none][vcodec!=none]/"
-            "best[acodec!=none][vcodec!=none]"
+            f'bestvideo{exact}[ext=mp4]+bestaudio[ext=m4a]/'
+            f'bestvideo{exact}+bestaudio/'
+            f'best{exact}[ext=mp4]/best{exact}'
         )
-
+    else:
+        selected_format = f'best{exact}[acodec!=none][vcodec!=none]'
     return selected_format, source_height
 
 
@@ -482,7 +472,7 @@ def run_download_job(job_id):
 
         info = extract_info_with_retry(url, download=False)
         title = info.get("title") or "video"
-        update_job(job_id, title=title, platform=platform_for(url))
+        update_job(job_id, title=title, platform=platform_for(url), available_qualities=format_available_qualities(info))
 
         options = base_ydl_options()
         options.update({
