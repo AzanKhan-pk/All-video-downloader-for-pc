@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
+using CefSharp;
+using CefSharp.WinForms;
 
 namespace VidLoom.Desktop;
 
@@ -12,14 +12,31 @@ internal static class Program
     [STAThread]
     private static void Main()
     {
+        var settings = new CefSettings
+        {
+            CachePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "All Video Downloader Without Watermark",
+                "BrowserCache"),
+            LogSeverity = LogSeverity.Disable
+        };
+
+        Cef.EnableHighDPISupport();
+        Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+
         ApplicationConfiguration.Initialize();
         Application.Run(new MainForm());
+
+        Cef.Shutdown();
     }
 
     private sealed class MainForm : Form
     {
-        private readonly WebView2 browser = new() { Dock = DockStyle.Fill };
-        private static readonly HttpClient Http = new(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All });
+        private readonly ChromiumWebBrowser browser;
+        private static readonly HttpClient Http = new(new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.All
+        });
 
         public MainForm()
         {
@@ -29,89 +46,152 @@ internal static class Program
             Height = 820;
             MinimumSize = new Size(900, 600);
             Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
+            browser = new ChromiumWebBrowser(StartUrl)
+            {
+                Dock = DockStyle.Fill
+            };
+
+            // Keep the normal Chromium context menu enabled so text selection,
+            // Copy/Paste, links, image actions and other right-click actions work.
+            browser.MenuHandler = new DefaultMenuHandler();
+
+            // Legacy binding exposes window.VidLoomNative directly to the existing
+            // web UI, so the website does not need to be redesigned.
+            browser.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
+            browser.JavascriptObjectRepository.Register(
+                "VidLoomNative",
+                new NativeBridge(this),
+                isAsync: false,
+                options: BindingOptions.DefaultBinder);
+
             Controls.Add(browser);
-            Load += async (_, _) => await InitializeBrowserAsync();
             FormClosed += (_, _) => browser.Dispose();
         }
 
-        private async Task InitializeBrowserAsync()
+        private sealed class DefaultMenuHandler : IContextMenuHandler
         {
-            try
+            public void OnBeforeContextMenu(
+                IWebBrowser chromiumWebBrowser,
+                IBrowser browser,
+                IFrame frame,
+                IContextMenuParams parameters,
+                IMenuModel model)
             {
-                await browser.EnsureCoreWebView2Async();
-                browser.CoreWebView2.Settings.IsStatusBarEnabled = false;
-                browser.CoreWebView2.Settings.AreDefaultContextMenusEnabled = true;
-                browser.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
-                await browser.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync("""
-                    (() => {
-                      window.VidLoomNative = {
-                        download: (url, filename) => {
-                          window.chrome.webview.postMessage({ type: "download", url, filename });
-                        },
-                        openDownloads: () => {
-                          window.chrome.webview.postMessage({ type: "openDownloads" });
-                        }
-                      };
-                    })();
-                    """);
-                browser.CoreWebView2.Navigate(StartUrl);
+                // Do not clear the default menu.
             }
-            catch (Exception ex)
+
+            public bool RunContextMenu(
+                IWebBrowser chromiumWebBrowser,
+                IBrowser browser,
+                IFrame frame,
+                IContextMenuParams parameters,
+                IRunContextMenuCallback callback)
+                => false;
+
+            public bool OnContextMenuCommand(
+                IWebBrowser chromiumWebBrowser,
+                IBrowser browser,
+                IFrame frame,
+                IContextMenuParams parameters,
+                CefMenuCommand commandId,
+                CefEventFlags eventFlags)
+                => false;
+
+            public void OnContextMenuDismissed(
+                IWebBrowser chromiumWebBrowser,
+                IBrowser browser,
+                IFrame frame)
             {
-                MessageBox.Show(
-                    "VidLoom could not start the embedded browser. Please install Microsoft Edge WebView2 Runtime and try again.\n\n" + ex.Message,
-                    "VidLoom", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            public bool RunContextMenu(
+                IWebBrowser chromiumWebBrowser,
+                IBrowser browser,
+                IFrame frame,
+                IContextMenuParams parameters,
+                IRunContextMenuCallback callback,
+                int commandId)
+                => false;
         }
 
-        private async void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+        private sealed class NativeBridge
         {
-            try
+            private readonly MainForm form;
+
+            public NativeBridge(MainForm form)
             {
-                using var document = JsonDocument.Parse(e.WebMessageAsJson);
-                var root = document.RootElement;
-                if (!root.TryGetProperty("type", out var type)) return;
-                var messageType = type.GetString();
-                if (messageType == "openDownloads")
+                this.form = form;
+            }
+
+            public void download(string url, string filename)
+            {
+                _ = Task.Run(async () =>
                 {
-                    var downloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                    try
+                    {
+                        await DownloadToDownloadsAsync(url, filename);
+                    }
+                    catch (Exception ex)
+                    {
+                        form.BeginInvoke(() => MessageBox.Show(
+                            form,
+                            "The download could not be saved.\n\n" + ex.Message,
+                            "All Video Downloader Without Watermark",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error));
+                    }
+                });
+            }
+
+            public void openDownloads()
+            {
+                try
+                {
+                    var downloads = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                        "Downloads");
                     Directory.CreateDirectory(downloads);
+
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = "explorer.exe",
-                        Arguments = $"\\\"{downloads}\\\"",
+                        Arguments = $"\"{downloads}\"",
                         UseShellExecute = true
                     });
-                    return;
                 }
-                if (messageType != "download") return;
-
-                var url = root.GetProperty("url").GetString();
-                var filename = root.GetProperty("filename").GetString();
-                if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(filename)) return;
-
-                await DownloadToDownloadsAsync(url, filename);
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        form,
+                        "Could not open the Downloads folder.\n\n" + ex.Message,
+                        "All Video Downloader Without Watermark",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
             }
-            catch (Exception ex)
+
+            private static async Task DownloadToDownloadsAsync(string url, string filename)
             {
-                BeginInvoke(() => MessageBox.Show(
-                    "The download could not be saved.\n\n" + ex.Message,
-                    "VidLoom", MessageBoxButtons.OK, MessageBoxIcon.Error));
+                var downloads = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "Downloads");
+                Directory.CreateDirectory(downloads);
+
+                var safeName = string.Join(
+                    "_",
+                    filename.Split(Path.GetInvalidFileNameChars()));
+                var destination = Path.Combine(downloads, safeName);
+
+                using var response = await Http.GetAsync(
+                    url,
+                    HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+
+                await using var source = await response.Content.ReadAsStreamAsync();
+                await using var target = File.Create(destination);
+                await source.CopyToAsync(target);
             }
-        }
-
-        private static async Task DownloadToDownloadsAsync(string url, string filename)
-        {
-            var downloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            Directory.CreateDirectory(downloads);
-            var safeName = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
-            var destination = Path.Combine(downloads, safeName);
-
-            using var response = await Http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-            await using var source = await response.Content.ReadAsStreamAsync();
-            await using var target = File.Create(destination);
-            await source.CopyToAsync(target);
         }
     }
 }
