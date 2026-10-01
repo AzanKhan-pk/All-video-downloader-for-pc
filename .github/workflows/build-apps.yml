@@ -78,7 +78,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: release-windows
-          path: build/installer/VidLoom-Setup.exe
+          path: build/installer/All-Video-Downloader-Without-Watermark-Setup.exe
 
   release:
     name: Create GitHub Release
@@ -100,7 +100,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="v1.0.${{ github.run_number }}"
-          gh release create "$TAG" release/All-Video-Downloader.apk release/VidLoom-Setup.exe \
+          gh release create "$TAG" release/All-Video-Downloader.apk release/All-Video-Downloader-Without-Watermark-Setup.exe \
             --repo "${{ github.repository }}" \
             --title "All Video Downloader Without Watermark $TAG" \
             --generate-notes
