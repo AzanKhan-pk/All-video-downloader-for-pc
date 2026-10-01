@@ -283,3 +283,19 @@ select option{background:var(--surface);color:var(--ink)}
         background-position: 200% 50%;
     }
 }
+
+.location-picker{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.location-picker button,.recent-head button,.recent-actions button{border:1px solid var(--line);background:transparent;color:var(--text);padding:8px 10px;cursor:pointer;font:500 10px "DM Mono",monospace}
+.location-picker button:hover,.recent-head button:hover,.recent-actions button:hover{border-color:var(--lime);color:var(--lime)}
+.location-picker small{color:var(--dim)}
+.quality-grid button.unavailable{opacity:.35;text-decoration:line-through}
+.recent-downloads{margin-top:28px;padding:20px;border:1px solid var(--line);background:oklch(16% .024 275/.76);backdrop-filter:blur(16px)}
+.recent-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.recent-head h3{margin:4px 0 0;font-size:17px}
+#recentList{display:grid;gap:8px}
+.recent-item{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px;border-top:1px solid var(--line)}
+.recent-item strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:600px}
+.recent-item small{display:block;color:var(--muted);margin-top:4px;font-size:10px}
+.recent-actions{display:flex;gap:6px;flex-shrink:0}
+.recent-actions .recent-remove{font-size:17px;line-height:1}
+.recent-empty{color:var(--muted);font-size:12px;margin:4px 0}
