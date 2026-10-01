@@ -10,7 +10,7 @@
 
   <meta
     name="description"
-    content="VidLoom Video Downloader — All Video Downloader for Free. Paste a public YouTube, TikTok, Instagram, Facebook, X/Twitter, Reddit, Vimeo, Twitch, Dailymotion, SoundCloud or Bilibili link and download the available MP4 video or MP3 audio for free."
+    content="All Video Downloader Without Watermark — All Video Downloader for Free. Paste a public YouTube, TikTok, Instagram, Facebook, X/Twitter, Reddit, Vimeo, Twitch, Dailymotion, SoundCloud or Bilibili link and download the available MP4 video or MP3 audio for free."
   >
 
   <meta
@@ -85,15 +85,15 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "VidLoom Video Downloader",
-    "alternateName": ["VidLoom Video Downloader", "All Video Downloader for Free", "VidLoom"],
-    "description": "VidLoom Video Downloader — All Video Downloader for Free. Paste a public video or audio link and download the available MP4 or MP3 file.",
+    "name": "All Video Downloader Without Watermark",
+    "alternateName": ["All Video Downloader Without Watermark", "All Video Downloader for Free", "All Video Downloader"],
+    "description": "All Video Downloader Without Watermark — All Video Downloader for Free. Paste a public video or audio link and download the available MP4 or MP3 file.",
     "url": "https://avd.up.railway.app/"
   }
   </script>
 
   <link rel="canonical" href="https://avd.up.railway.app/">
-  <title>VidLoom Video Downloader | All Video Downloader for Free</title>
+  <title>All Video Downloader Without Watermark | All Video Downloader for Free</title>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2404211463113597" crossorigin="anonymous"></script>
 </head>
 
@@ -108,16 +108,16 @@
     <a
       class="brand"
       href="#top"
-      aria-label="VidLoom Video Downloader home"
+      aria-label="All Video Downloader Without Watermark home"
     >
       <img
         class="brand-logo"
         src="{{ url_for('static', filename='logo.png') }}"
-        alt="VidLoom Video Downloader logo"
+        alt="All Video Downloader Without Watermark logo"
       >
 
       <span class="brand-text">
-        VidLoom VIDEO<br>
+        ALL VIDEO<br>
         <b>DOWNLOADER</b>
       </span>
     </a>
@@ -385,6 +385,11 @@
 
           </button>
 
+        <button class="mode" type="button" data-mode="image">
+          <span class="mode-icon">▣</span>
+          <span><b>Image</b><small>Original image</small></span>
+        </button>
+
         </div>
 
 
@@ -476,21 +481,11 @@
           <div class="advanced-grid">
 
             <label>
-
               Download location
-
-              <select>
-
-                <option>
-                  Browser downloads
-                </option>
-
-                <option>
-                  Ask every time
-                </option>
-
-              </select>
-
+              <div class="location-picker">
+                <button id="browseLocationBtn" type="button">Browse / Choose folder</button>
+                <small id="locationLabel">Browser Downloads</small>
+              </div>
             </label>
 
 
@@ -691,6 +686,15 @@
 
       </div>
 
+
+
+        <section id="recentDownloads" class="recent-downloads" aria-live="polite">
+          <div class="recent-head">
+            <div><p class="download-progress-label">RECENT DOWNLOADS</p><h3>Your latest files</h3></div>
+            <button id="clearRecentBtn" type="button">Clear list</button>
+          </div>
+          <div id="recentList"></div>
+        </section>
     </section>
 
 
@@ -1230,11 +1234,11 @@
       <div class="section-intro">
         <p class="eyebrow">06 / Download guide</p>
         <h2>How to use the<br><span>video downloader.</span></h2>
-        <p>VidLoom is designed for public media that you are allowed to download. Always respect copyright, platform rules and the rights of creators.</p>
+        <p>All Video Downloader is designed for public media that you are allowed to download. Always respect copyright, platform rules and the rights of creators.</p>
       </div>
       <div class="flow">
         <article><span>01</span><h3>Copy a public link</h3><p>Open a supported public video or audio page and copy its complete URL from the address bar or share menu.</p></article>
-        <article><span>02</span><h3>Paste and inspect</h3><p>Paste the URL into VidLoom and select Fetch media. The site checks the public link and displays available information.</p></article>
+        <article><span>02</span><h3>Paste and inspect</h3><p>Paste the URL into All Video Downloader and select Fetch media. The site checks the public link and displays available information.</p></article>
         <article><span>03</span><h3>Choose a format</h3><p>Select video or audio and choose an available quality. Higher resolutions depend on the source and server processing tools.</p></article>
       </div>
     </section>
@@ -1243,9 +1247,9 @@
       <div class="about-copy">
         <p class="eyebrow">07 / Frequently asked questions</p>
         <h2>Useful answers,<br>before you <span>download.</span></h2>
-        <p><b>Is VidLoom free?</b><br>VidLoom provides its public-media tool without a subscription on the current website.</p>
+        <p><b>Is All Video Downloader free?</b><br>All Video Downloader provides its public-media tool without a subscription on the current website.</p>
         <p><b>Why does a link sometimes fail?</b><br>A platform may change its public page, require login, restrict automated access, or remove the media. Available formats can also differ by video.</p>
-        <p><b>Can every quality be downloaded?</b><br>No. The source decides which qualities and formats are available. VidLoom can only process compatible formats that are actually available from the public source.</p>
+        <p><b>Can every quality be downloaded?</b><br>No. The source decides which qualities and formats are available. All Video Downloader can only process compatible formats that are actually available from the public source.</p>
         <p><b>Can private or login-only media be downloaded?</b><br>No. The site is intended for public media and does not provide a way to bypass private access or account restrictions.</p>
         <p><b>Where can I learn more?</b><br>Read the <a href="/how-to-use">step-by-step guide</a>, <a href="/faq">full FAQ</a>, <a href="/about">About page</a> and <a href="/about">About</a>
     <a href="/how-to-use">How to Use</a>
@@ -1258,7 +1262,7 @@
   <footer class="site-footer section-shell">
 
     <span>
-      VidLoom VIDEO DOWNLOADER
+      ALL VIDEO DOWNLOADER
     </span>
 
     <span>
@@ -1348,7 +1352,7 @@
         }
 
         console.log(
-          "VidLoom installed successfully"
+          "All Video Downloader installed successfully"
         );
 
       }
@@ -1368,7 +1372,7 @@
             .then(() => {
 
               console.log(
-                "VidLoom service worker registered"
+                "All Video Downloader service worker registered"
               );
 
             })
