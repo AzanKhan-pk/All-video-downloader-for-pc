@@ -10,9 +10,9 @@ AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\VidLoom
 DefaultGroupName=VidLoom
-OutputDir=build\installer
+OutputDir=..\build\installer
 OutputBaseFilename=VidLoom-Setup
-SetupIconFile=windows\icon.ico
+SetupIconFile=..\windows\icon.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
@@ -24,8 +24,8 @@ CloseApplications=yes
 RestartIfNeededByRun=no
 
 [Files]
-Source: "build\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "build\MicrosoftEdgeWebView2Setup.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "..\build\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\build\MicrosoftEdgeWebView2Setup.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 [Icons]
 Name: "{autodesktop}\VidLoom Video Downloader"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\{#AppExeName}"
