@@ -644,12 +644,6 @@ async function monitorDownload(jobId) {
         );
       }
 
-      const temporaryUrl =
-        URL.createObjectURL(fileBlob);
-
-      const downloadLink =
-        document.createElement("a");
-
       const safeFileName =
         (currentVideo.title || "video")
           .replace(/[^\w\s.-]/g, "")
@@ -661,25 +655,35 @@ async function monitorDownload(jobId) {
           ? "mp3"
           : "mp4";
 
-      downloadLink.href =
-        temporaryUrl;
+      const nativeDownloadUrl =
+        new URL("/api/download/" + jobId + "/file", window.location.origin).href;
 
-      downloadLink.download =
-        `${safeFileName}.${extension}`;
-
-      document.body.appendChild(
-        downloadLink
-      );
-
-      downloadLink.click();
-
-      downloadLink.remove();
-
-      setTimeout(() => {
-        URL.revokeObjectURL(
-          temporaryUrl
+      if (
+        window.VidLoomNative &&
+        typeof window.VidLoomNative.download === "function"
+      ) {
+        window.VidLoomNative.download(
+          nativeDownloadUrl,
+          safeFileName + "." + extension
         );
-      }, 5000);
+      } else {
+        const temporaryUrl =
+          URL.createObjectURL(fileBlob);
+
+        const downloadLink =
+          document.createElement("a");
+
+        downloadLink.href = temporaryUrl;
+        downloadLink.download = safeFileName + "." + extension;
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+
+        setTimeout(() => {
+          URL.revokeObjectURL(temporaryUrl);
+        }, 5000);
+      }
 
       setDownloadProgressMessage(
         "✓ Download completed.",
